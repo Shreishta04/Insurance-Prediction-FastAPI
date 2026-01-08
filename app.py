@@ -4,6 +4,10 @@ from contextlib import asynccontextmanager
 import pandas as pd
 import pickle
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 model = None
 
@@ -21,15 +25,20 @@ app = FastAPI(
     lifespan = lifespan
 )
 
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        
+        FRONTEND_ORIGIN,
+        "http://localhost:3000",
+        "http://localhost:5173"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 class UserInput(BaseModel):
     age : int
     body_part : str
